@@ -1,95 +1,75 @@
-const buttons = document.querySelectorAll('button')
-const resultSpan = document.querySelector('span')
-console.log(buttons)
-buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-        let playerChoice = button.id;
-        let computerChoice = getComputerChoice();
-        let result = playRound(playerChoice, computerChoice)
-        resultSpan.textContent = ` a ${result}`
-    }) 
-})
+let playerScore = 0;
+let computerScore = 0;
+let gameFinished = false;
 
-// // The computer will randomly choose rock, paper, or scissors
-function getComputerChoice() {
+// QUERY SELECTORS
+
+let rockButton = document.querySelector("#rock")
+let paperButton = document.querySelector("#paper")
+let scissorsButton = document.querySelector("#scissors")
+let resultSpan = document.querySelector("#result")
+let playerSpan = document.querySelector("#playerScore")
+let computerSpan = document.querySelector ("#computerScore")
+
+// FUNCTIONS
+function getComputerChoice () {
+    let computerChoice
     let randomInt = Math.floor(Math.random() * 3)
-    let computerChoice = ""
     if (randomInt == 0) {
-        computerChoice= "rock"
+        computerChoice = "rock";
     } else if (randomInt == 1) {
-        computerChoice = "paper"
+        computerChoice = "paper";
     } else {
-        computerChoice = "scissors"
+        computerChoice = "scissors";
     }
     return computerChoice
 }
 
-function playRound(playerChoice, computerChoice) {
-    let result = ""
-// If the player choses rock and the computer chose paper - they lose
-    if (playerChoice == "rock" && computerChoice == "paper") {
-        result = "loss"
-    } 
-// If the player choses paper and the computer chose scissors - they lose
-    else if (playerChoice == "paper" && computerChoice == "scissor"){
-        result = "loss"
+function playRound(playerChoice){
+    let computerChoice  = getComputerChoice()
+    let result
+    if(playerScore >= 5){
+        resultSpan.textContent = "Game Finished! Player win"
+    } else if (computerScore >= 5) {
+        resultSpan.textContent = "Game Finished! Computer win"
     }
-// If the player choses scissors and the computer chose rock - they lose
-    else if (playerChoice == "scissors" && computerChoice == "rock") {
-        result = "loss"
-    }
-// If the player choses the same option as the computer - they tie
-    else if (playerChoice == computerChoice) {
-        result = "tie"
-    }
-// Else the player wins
+    
     else {
-        result = "win"
+        if (
+            playerChoice == "rock" && computerChoice == "paper" ||
+            playerChoice == "scissors" && computerChoice == "rock" ||
+            playerChoice == "paper" && computerChoice == "scissors"){
+                result = "loss";
+                computerScore++;
+                computerSpan.textContent = computerScore
+                
+        } else if (
+            playerChoice == "rock" && computerChoice == "scissors" ||
+            playerChoice == "scissors" && computerChoice == "paper" ||
+            playerChoice == "paper" && computerChoice == "rock"){
+                result = "win";
+                playerScore++;
+                playerSpan.textContent = playerScore
+                
+        } else {
+                result = "tie"
+        } 
+        resultSpan.textContent = result
     }
-// The program should tell the user if they won, lost or tied
-    return result
+    
 }
-// The user can then play a best of five
-// function game() {
-//     let playerPoint = 0;
-//     let computerPoint = 0;
-//     gameWon = false;
-//     winner = "none"
 
-//     while (gameWon == false) {
-//         const computerChoice = getComputerChoice()
-//         const playerChoice = getPlayerChoice()
-//         if (playerChoice == "error") {
-//             console.log("Mmm that didn't look right, try again")
-//             continue
-//         }
-        
-//         roundResult = playRound(playerChoice,computerChoice)
+function playGame() {
+    rockButton.addEventListener('click', () => {
+        playRound("rock")   
+    })
+    paperButton.addEventListener('click', () => {
+        playRound("paper")
+    })
+    scissorsButton.addEventListener('click', () => {
+        playRound("scissors")
+    }) 
+}
 
-//         if (roundResult == "win") {
-//             playerPoint += 1;
-//             console.log("You won the round, congrats!")
-//         } else if (roundResult == "lose") {
-//             computerPoint += 1;
-//             console.log("You lost to a computer?")
-//         } else {
-//             console.log("It's a tie!")
-//         }
-
-//         console.log("player points:" + playerPoint)
-//         console.log("computer points:" + computerPoint)
-
-//         if (playerPoint >= 5) {
-//             winner = "Player"
-//             gameWon = true;
-//         } else if (computerPoint >= 5) {
-//             winner = "Computer"
-//             gameWon = true;
-//         } 
-//     } 
-
-//     return winner
-// }
-// winner = game()
-// console.log(winner)
+playGame()
 
